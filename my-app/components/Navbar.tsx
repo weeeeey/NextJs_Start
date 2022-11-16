@@ -20,11 +20,11 @@ const Navbar = () => {
                 >
                     About
                 </Link>
-                {/* <style jsx>{`
+                <style jsx>{`
                     nav {
                         background-color: whitesmoke;
                     }
-                `}</style> */}
+                `}</style>
             </nav>
         </div>
     );
