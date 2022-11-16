@@ -1,8 +1,8 @@
-import Link from "next/link";
-import Navbar from "../components/Navbar";
+import Seo from "../components/Seo";
 const Home = () => {
     return (
         <div>
+            <Seo title="Home" />
             <h1>Hi</h1>
         </div>
     );

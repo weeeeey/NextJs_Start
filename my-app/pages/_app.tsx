@@ -1,12 +1,11 @@
-// https://nextjs.org/docs/basic-features/typescript#custom-app
 import type { AppProps } from "next/app";
-
-import Navbar from "../components/Navbar";
+import Layout from "../components/Layout";
 
 const Myapp = ({ Component, pageProps }: AppProps) => {
     return (
         <>
-            <Navbar /> <Component {...pageProps} />
+            {/* Layout children으로 모든 페이지(컴포넌트)들이 들어감 */}
+            <Layout /> <Component {...pageProps} />
         </>
     );
 };
