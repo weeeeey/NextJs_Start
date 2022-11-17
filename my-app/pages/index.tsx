@@ -2,6 +2,7 @@
 
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Seo from "../components/Seo";
 
 interface IGetMovie {
@@ -18,6 +19,10 @@ interface IGetMovie {
 const API_KEY = "60ddc094191d95126e31c189fc6f81a8";
 
 const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
+    const route = useRouter();
+    const onClick = (id: number) => {
+        route.push(`/movies/${id}`);
+    };
     return (
         <div className="container">
             <Seo title="Home" />
@@ -25,15 +30,21 @@ const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
             {results?.map((movie: IGetMovie) => (
                 <div className="movie" key={movie.id}>
                     <img
+                        onClick={() => onClick(movie.id)}
                         src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     />
                     <h4>
-                        <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+                        <Link legacyBehavior href={`/movies/${movie.id}`}>
+                            <a>{movie.title}</a>
+                        </Link>
                     </h4>
                 </div>
             ))}
             <style jsx>
                 {`
+                    a {
+                        text-decoration: none;
+                    }
                     .container {
                         display: grid;
                         grid-template-columns: 1fr 1fr;
@@ -47,6 +58,7 @@ const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
                         box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
                     }
                     .movie:hover img {
+                        cursor: pointer;
                         transform: scale(1.05) translateY(-10px);
                     }
                     .movie h4 {
