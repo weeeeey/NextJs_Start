@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 const MovieDetail = () => {
     const route = useRouter();
     console.log(route);
-    return "movie detail";
+    return (
+        <>
+            <h4>{route.query.title || "Loading..."}</h4>
+        </>
+    );
 };
 
 export default MovieDetail;
