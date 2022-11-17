@@ -1,3 +1,4 @@
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect, useState } from "react";
 import Seo from "../components/Seo";
 
@@ -24,19 +25,12 @@ interface IGetMovie {
 const API_KEY = "60ddc094191d95126e31c189fc6f81a8";
 // https://api.themoviedb.org/3/movie/popular?api_key=60ddc094191d95126e31c189fc6f81a8
 
-const Home = () => {
-    const [movies, setMovies] = useState<IGetMovie[]>();
-    useEffect(() => {
-        (async () => {
-            const { results } = await (await fetch(`/api/movies`)).json();
-            setMovies(results);
-        })();
-    }, []);
+const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
     return (
         <div className="container">
             <Seo title="Home" />
-            {!movies && <h4>Loading...</h4>}
-            {movies?.map((movie) => (
+            {!results && <h4>Loading...</h4>}
+            {results?.map((movie: IGetMovie) => (
                 <div className="movie" key={movie.id}>
                     <img
                         src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
@@ -71,4 +65,27 @@ const Home = () => {
     );
 };
 
+export const getServerSideProps = async ({}: GetServerSideProps) => {
+    const { results } =
+        await // 서버에서 작동하는거라 주소는 무조건 절대주소 입력
+        (await fetch(`http://localhost:3000/api/movies`)).json();
+    return {
+        props: {
+            results,
+        },
+    };
+};
+
 export default Home;
+
+// ⭐️ ServerSide Cycle
+// Next Server가 GET 요청을 받는다.
+// 요청에 맞는 Page를 찾는다.
+// _app.tsx의 getInitialProps가 있다면 실행한다.
+// Page Component의 getInitialProps가 있다면 실행한다. pageProps들을 받아온다.
+// document.tsx의 getInitialProps가 있다면 실행한다. pageProps들을 받아온다.
+// 모든 props들을 구성하고, _app.js > page Component 순서로 rendering.
+// 모든 Content를 구성하고 _document.js를 실행하여 html 형태로 출력한다.
+// 이 흐름을 보았을 때, 모든 페이지에 공통적인 데이터 패칭이 필요하다면
+// _app.tsx에서 미리 데이터 패칭을 해주면 되고, 페이지마다 다른 데이터가 필요하다면
+// 페이지마다 데이터 패칭을 해주면 됩니다. 그 구체적인 방법에 대해 알아보겠습니다.
