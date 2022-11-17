@@ -1,3 +1,5 @@
+// https://nextjs.org/docs/basic-features/typescript
+
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useEffect, useState } from "react";
 import Seo from "../components/Seo";
@@ -65,7 +67,7 @@ const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
     );
 };
 
-export const getServerSideProps = async ({}: GetServerSideProps) => {
+export const getServerSideProps: GetServerSideProps = async () => {
     const { results } =
         await // 서버에서 작동하는거라 주소는 무조건 절대주소 입력
         (await fetch(`http://localhost:3000/api/movies`)).json();
