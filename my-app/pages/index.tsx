@@ -20,8 +20,12 @@ const API_KEY = "60ddc094191d95126e31c189fc6f81a8";
 
 const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
     const route = useRouter();
-    const onClick = (id: number) => {
-        route.push(`/movies/${id}`);
+    const onClick = (id: number, title: string) => {
+        // (method) push(url: Url, as?: Url | undefined, options?: TransitionOptions | undefined): Promise<boolean>
+        route.push(
+            { pathname: `/movies/${id}`, query: { title } }, //url
+            `/movies/${id}` //as
+        );
     };
     return (
         <div className="container">
@@ -30,11 +34,18 @@ const Home = ({ results }: InferGetServerSidePropsType<GetServerSideProps>) => {
             {results?.map((movie: IGetMovie) => (
                 <div className="movie" key={movie.id}>
                     <img
-                        onClick={() => onClick(movie.id)}
+                        onClick={() => onClick(movie.id, movie.title)}
                         src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     />
                     <h4>
-                        <Link legacyBehavior href={`/movies/${movie.id}`}>
+                        <Link
+                            legacyBehavior
+                            href={{
+                                pathname: `/movies/${movie.id}`,
+                                query: { title: movie.title },
+                            }}
+                            as={`/movies/${movie.id}`}
+                        >
                             <a>{movie.title}</a>
                         </Link>
                     </h4>
